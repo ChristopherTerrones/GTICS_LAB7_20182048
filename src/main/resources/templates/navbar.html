@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:fragment="header (title)">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+        <title th:text="${title}"></title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4" th:fragment="navbar (active)">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Northwind</a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false"
+                        aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- ADMIN Access -->
+                        <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+                            <a th:classappend="${titulo=='Funciones'?'active':''}" class="nav-link" href="/funciones">Funciones</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+                            <a th:classappend="${titulo=='Todas las Reservas'?'active':''}" class="nav-link" href="/reservas/admin">Todas las Reservas</a>
+                        </li>
+                        <!-- GERENTE Access -->
+                        <li sec:authorize="hasAuthority('GERENTE')" class="nav-item">
+                            <a th:classappend="${titulo=='Salas'?'active':''}" class="nav-link" href="/salas">Salas</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('GERENTE')" class="nav-item">
+                            <a th:classappend="${titulo=='Obras'?'active':''}" class="nav-link" href="/obras">Obras</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('GERENTE')" class="nav-item">
+                            <a th:classappend="${titulo=='Funciones'?'active':''}" class="nav-link" href="/funciones">Funciones</a>
+                        </li>
+                        <!-- CLIENTE Access -->
+                        <li sec:authorize="hasAuthority('CLIENTE')" class="nav-item">
+                            <a th:classappend="${titulo=='Obras'?'active':''}" class="nav-link" href="/obras">Obras</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('CLIENTE')" class="nav-item">
+                            <a th:classappend="${titulo=='Mis Reservas'?'active':''}" class="nav-link" href="/reservas/cliente">Mis Reservas</a>
+                        </li>
+                    </ul>
+                    <!-- User Information -->
+                    <div sec:authorize="isAuthenticated()">
+                        <div>
+                            <span th:text="|Bienvenido ${#authentication.name} ${#authentication.authorities[0]}|"></span>
+                        </div>
+                        <div>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="btn btn-link">Cerrar sesión</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Login Button for Anonymous Users -->
+                    <div sec:authorize="isAnonymous()">
+                        <div>
+                            <form th:action="@{/login}" method="get">
+                                <button type="submit" class="btn btn-link">Iniciar sesión</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <script th:fragment="footer-bootstrap" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    </body>
+</html>
